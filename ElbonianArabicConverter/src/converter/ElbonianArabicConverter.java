@@ -2,7 +2,8 @@ package converter;
 
 import converter.exceptions.MalformedNumberException;
 import converter.exceptions.ValueOutOfBoundsException;
-import java.util.regex;
+
+import static jdk.nashorn.internal.objects.Global.print;
 
 /**
  * This class implements a converter that takes a string that represents a number in either the
@@ -13,7 +14,7 @@ import java.util.regex;
 public class ElbonianArabicConverter {
 
     //A string that holds the number (Elbonian or Arabic) you would like to convert
-    private final String number;
+    private String number = null;
 
     /**
      * Constructor for the ElbonianArabic class that takes a string. The string should contain a valid
@@ -36,7 +37,7 @@ public class ElbonianArabicConverter {
         boolean yxComboValid = false;
         boolean jiComboValid = false;
 
-        String holder;
+        String holder = null;
         number = number.replaceAll(" ",""); //remove all spaces; leading, trailing, and in-between
 
         if((number != null) && (!number.equals("")) && (number.matches("[0-9]+")) && (number.charAt(0) != '0') && (Integer.parseInt(number) <= 9999) && (Integer.parseInt(number) != 0)) {
@@ -44,15 +45,13 @@ public class ElbonianArabicConverter {
         } else if((number != null) && (!number.equals("")) && (number.matches("N{0,3}M{0,2}D{0,3}C{0,2}Y{0,3}X{0,2}J{0,3}I{0,2}"))) {
             conditionX = true;
             holder = number;
-        } else if(Integer.parseInt(number) <= 0 || Integer.parseInt(number) > 9999) {
-            throws new ValueOutOfBoundsException("Input Arabic exceeds Elbonian bounds.");
-        } else if(Double.parseDouble(number) <= 0 || Double.parseDouble(number) >= 0) {
-            throws new ValueOutOfBoundsException("Input Arabic cannot be decimal.");
-        } else if() {
-
-
-
         }
+        /*else if(Integer.parseInt(number) <= 0 || Integer.parseInt(number) > 9999) {
+            throw new ValueOutOfBoundsException("Input Arabic exceeds Elbonian bounds.");
+        } else if(Double.parseDouble(number) <= 0 || Double.parseDouble(number) >= 0) {
+            throw new ValueOutOfBoundsException("Input Arabic cannot be decimal.");
+        }
+        */
 
         if(conditionX && (holder != null) && (!holder.equals(""))) {
 
@@ -74,7 +73,7 @@ public class ElbonianArabicConverter {
                 return;
             }
 
-            if (holder.matches("N*M*D*C*Y*X*(J{3})") && || holder.matches("N*M*D*C*Y*X*(J{0,2})I*")) {
+            if (holder.matches("N*M*D*C*Y*X*(J{3})") || holder.matches("N*M*D*C*Y*X*(J{0,2})I*")) {
                 jiComboValid = true;
             } else {
                 return;
@@ -97,7 +96,7 @@ public class ElbonianArabicConverter {
     public int toArabic() {
         // TODO Fill in the method's body
         int count = 0;
-        for (int i = 0; i < number.length; i++) {
+        for (int i = 0; i < number.length(); i++) {
             if(number.charAt(i) == 'N') {
                 count += 3000;
             }
@@ -134,55 +133,55 @@ public class ElbonianArabicConverter {
     public String toElbonian() {
         // TODO Fill in the method's body
         int arabic = Integer.parseInt(number);
-        String Elbo;
+        StringBuilder Elbo = new StringBuilder();
         int remainder = arabic % 3000;
         int timesDivided = arabic / 3000;
-        for (int i = 0; i <timesDivided, i++) {
+        for (int i = 0; i <timesDivided; i++) {
             Elbo.append('N');
         }
 
         int remainder2 = remainder % 1000;
         int timesDivided2 = remainder / 1000;
-        for (int i = 0; i <timesDivided2, i++) {
+        for (int i = 0; i <timesDivided2; i++) {
             Elbo.append('M');
         }
 
         int remainder3 = remainder2 % 300;
         int timesDivided3 = remainder2 / 300;
-        for (int i = 0; i <timesDivided3, i++) {
+        for (int i = 0; i <timesDivided3; i++) {
             Elbo.append('D');
         }
 
         int remainder4 = remainder3 % 100;
         int timesDivided4 = remainder3 / 100;
-        for (int i = 0; i <timesDivided4, i++) {
+        for (int i = 0; i <timesDivided4; i++) {
             Elbo.append('C');
         }
 
         int remainder5 = remainder4 % 30;
         int timesDivided5 = remainder4 / 30;
-        for (int i = 0; i <timesDivided5, i++) {
+        for (int i = 0; i <timesDivided5; i++) {
             Elbo.append('Y');
         }
 
         int remainder6 = remainder5 % 10;
         int timesDivided6 = remainder5 / 10;
-        for (int i = 0; i <timesDivided6, i++) {
+        for (int i = 0; i <timesDivided6; i++) {
             Elbo.append('X');
         }
 
         int remainder7 = remainder6 % 3;
         int timesDivided7 = remainder6 / 3;
-        for (int i = 0; i <timesDivided7, i++) {
+        for (int i = 0; i <timesDivided7; i++) {
             Elbo.append('J');
         }
 
-        int remainder8 = remainder7 % 1;
         int timesDivided8 = remainder7 / 1;
-        for (int i = 0; i <timesDivided, i++) {
+        for (int i = 0; i < timesDivided8; i++) {
             Elbo.append('I');
         }
-        return ELBO;
+
+        return Elbo.toString();
     }
 
 }
