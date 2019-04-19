@@ -2,6 +2,7 @@ package converter;
 
 import converter.exceptions.MalformedNumberException;
 import converter.exceptions.ValueOutOfBoundsException;
+import java.util.regex;
 
 /**
  * This class implements a converter that takes a string that represents a number in either the
@@ -11,9 +12,8 @@ import converter.exceptions.ValueOutOfBoundsException;
  */
 public class ElbonianArabicConverter {
 
-    // A string that holds the number (Elbonian or Arabic) you would like to convert
+    //A string that holds the number (Elbonian or Arabic) you would like to convert
     private final String number;
-    private boolean isArabic;
 
     /**
      * Constructor for the ElbonianArabic class that takes a string. The string should contain a valid
@@ -30,146 +30,62 @@ public class ElbonianArabicConverter {
      */
     public ElbonianArabicConverter(String number) throws MalformedNumberException, ValueOutOfBoundsException {
 
-        // TODO check to see if the number is valid, then set it equal to the string
-        number = number.trim(); // remove leading numbers
+        boolean conditionX = false;
+        boolean nmComboValid = false;
+        boolean dcComboValid = false;
+        boolean yxComboValid = false;
+        boolean jiComboValid = false;
 
-        isArabic = true;
+        String holder;
+        number = number.replaceAll(" ",""); //remove all spaces; leading, trailing, and in-between
 
-        for (int i = 0; i < number.length(); i++) {
-            if (number.charAt(i) == ' '){
-                throw new ValueOutOfBoundsException("This Number has a Space in it; making it Invalid");
-            }
-            if (!Character.isDigit(number.charAt(i))) {
-                isArabic = false;
-            }
-        }
-
-        if isArabic{ // If the Number is Arabic
-            //First Make sure it is not greater than 9999
-            //Then convert the Number to Elbonian
-            if (number.length() > 4){
-                throw new ValueOutOfBoundsException("This number has too many characters so it exceds the maximum value limit of 9999");
-            }
-            for (int i = 0; i < number.length(); i++){
-                if (!Character.isDigit(number.charAt(i))) {
-                    throw new ValueOutOfBoundsException("This number is a mix between Elbonian and Arabic and is Invalid");
-                }
-            }
-
+        if((number != null) && (!number.equals("")) && (number.matches("[0-9]+")) && (number.charAt(0) != '0') && (Integer.parseInt(number) <= 9999) && (Integer.parseInt(number) != 0)) {
             this.number = number;
+        } else if((number != null) && (!number.equals("")) && (number.matches("N{0,3}M{0,2}D{0,3}C{0,2}Y{0,3}X{0,2}J{0,3}I{0,2}"))) {
+            conditionX = true;
+            holder = number;
+        } else if(Integer.parseInt(number) <= 0 || Integer.parseInt(number) > 9999) {
+            throws new ValueOutOfBoundsException("Input Arabic exceeds Elbonian bounds.");
+        } else if(Double.parseDouble(number) <= 0 || Double.parseDouble(number) >= 0) {
+            throws new ValueOutOfBoundsException("Input Arabic cannot be decimal.");
+        } else if() {
 
-            toElbonian(this.number);
+
+
         }
-        if !isArabic{ // If the number is elbonian
-            //Convert the Elbonian Number to Arabic
-            int mcount = 0;
-            int ccount = 0;
-            int xcount = 0;
-            int icount = 0;
-            int ncount = 0;
-            int dcount = 0;
-            int ycount = 0;
-            int jcount = 0;
 
-            boolean isValid = true;
+        if(conditionX && (holder != null) && (!holder.equals(""))) {
 
-            int count;
-            for (int i = 0; i<number.length(); i++) {
-                //Checking to Make sure the Elbonian ONLY consists of MCXI etc.
-                if(number.charAt(i) == 'M' || number.charAt(i) == 'C' || number.charAt(i) == 'X' || number.charAt(i) == 'I' || number.charAt(i) == 'N' || number.charAt(i) == 'D' || number.charAt(i) == 'Y' || number.charAt(i) == 'J') {
-                    if(number.charAt(i) == 'M'){
-                        mcount++;
-                        if (mcount >2 ){
-                            isValid = false;
-                        }
-                    }
-                    if(number.charAt(i) == 'C'){
-                        ccount++;
-                        if (ccount >2 ){
-                            isValid = false;
-                        }
-                    }
-                    if(number.charAt(i) == 'X'){
-                        xcount++;
-                        if (xcount >2 ){
-                            isValid = false;
-                        }
-                    }
-                    if(number.charAt(i) == 'I'){
-                        icount++;
-                        if icount >2 ){
-                            isValid = false;
-                        }
-                    }
-                    if(number.charAt(i) == 'N'){
-                        ncount++;
-                        if (ncount >3 ){
-                            isValid = false;
-                        }
-                    }
-                    if(number.charAt(i) == 'D'){
-                        dcount++;
-                        if (dcount >3 ){
-                            isValid = false;
-                        }
-                    }
-                    if(number.charAt(i) == 'Y'){
-                        ycount++;
-                        if (ycount >3 ){
-                            isValid = false;
-                        }
-                    }
-
-                    if(number.charAt(i) == 'J'){
-                        jcount++;
-                        if (xcount >3 ){
-                            isValid = false;
-                        }
-                    }
-                }
-                else{
-                    isValid = false; //One of the characers in the string is something other than MCXINDYJ
-                }
+            if (holder.matches("(N{3})D*C*Y*X*J*I*") || holder.matches("(N{0,2})M*D*C*Y*X*J*I*")) {
+                nmComboValid = true;
+            } else {
+                return;
             }
-            //Checking Maximum Amount of Each Elbonian Character
-            for (int i = 0; i<number.length(); i++) {
-                if (number.charAt(i) == 'M' && ncount >= 3) {
-                    isValid = false;
-                }
-                if (number.charAt(i) == 'C' && dcount >= 3) {
-                    isValid = false;
-                }
-                if (number.charAt(i) == 'X' && ycount >= 3) {
-                    isValid = false;
-                }
-                if (number.charAt(i) == 'I' && jcount >= 3) {
-                    isValid = false;
-                }
-                if (number.charAt(i) == 'I') {
-                    if (number.charAt(i + 1) != 'I' && i < number.length()) {
-                        isValid = false;
-                    }
-                }
-                if (number.indexOf('C') > number.indexOf('M') || number.indexOf('C') > number.indexOf('N') || number.indexOf('C') > number.indexOf('D')) {
-                    isValid = false;
-                }
-                if (number.indexOf('M') > number.indexOf('D') || number.indexOf('M') > number.indexOf('C') || number.indexOf('M') > number.indexOf('Y') || number.indexOf('M') > number.indexOf('X') || number.indexOf('M') > number.indexOf('J') || number.indexOf('M') > number.indexOf('I')) {
-                    isValid = false;
-                }
-                if (number.indexOf('D') > number.indexOf('C') || number.indexOf('D') > number.indexOf('Y') || number.indexOf('D') > number.indexOf('X') || number.indexOf('D') > number.indexOf('J') || number.indexOf('D') > number.indexOf('I')){
-                    isValid = false;
-                }
-                if (number.indexOf('N') != 0 || number.indexOf('I') != number.length() + 1){
-                    isValid = false;
-                }
+
+            if (holder.matches("N*M*(D{3})Y*X*J*I*") || holder.matches("N*M*(D{0,2})C*Y*X*J*I*")) {
+                dcComboValid = true;
+            } else {
+                return;
             }
-        }
 
-        if isValid{
-            this.number = number; //It will only get here if the number is Valid for ALL of the elbonian rules
-        }
+            if (holder.matches("N*M*D*C*(Y{3})J*I*") || holder.matches("N*M*D*C*(Y{0,2})X*J*I*")) {
+                yxComboValid = true;
+            } else {
+                return;
+            }
 
-        toArabic(this.number);
+            if (holder.matches("N*M*D*C*Y*X*(J{3})") && || holder.matches("N*M*D*C*Y*X*(J{0,2})I*")) {
+                jiComboValid = true;
+            } else {
+                return;
+            }
+        } else { return; }
+
+        if(nmComboValid && dcComboValid && yxComboValid && jiComboValid) {
+            number = holder;
+            this.number = number;
+        } else { return; }
+
     }
 
     /**
