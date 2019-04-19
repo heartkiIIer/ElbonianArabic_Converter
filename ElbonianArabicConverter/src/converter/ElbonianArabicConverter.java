@@ -29,58 +29,56 @@ public class ElbonianArabicConverter {
      */
     public ElbonianArabicConverter(String number) throws MalformedNumberException, ValueOutOfBoundsException {
 
-        boolean conditionX = false;
         boolean nmComboValid = false;
         boolean dcComboValid = false;
         boolean yxComboValid = false;
         boolean jiComboValid = false;
 
-        String holder = null;
         number = number.replaceAll(" ",""); //remove all spaces; leading, trailing, and in-between
 
         if((number != null) && (!number.equals("")) && (number.matches("[0-9]+")) && (number.charAt(0) != '0') && (Integer.parseInt(number) <= 9999) && (Integer.parseInt(number) != 0)) {
             this.number = number;
+
         } else if((number != null) && (!number.equals("")) && (number.matches("N{0,3}M{0,2}D{0,3}C{0,2}Y{0,3}X{0,2}J{0,3}I{0,2}"))) {
-            conditionX = true;
-            holder = number;
+
+            if (number.matches("(N{3})D*C*Y*X*J*I*") || number.matches("(N{0,2})M*D*C*Y*X*J*I*")) {
+                nmComboValid = true;
+            } else { this.number = null; return; }
+
+            if (number.matches("N*M*(D{3})Y*X*J*I*") || number.matches("N*M*(D{0,2})C*Y*X*J*I*")) {
+                dcComboValid = true;
+            } else { this.number = null; return; }
+
+            if (number.matches("N*M*D*C*(Y{3})J*I*") || number.matches("N*M*D*C*(Y{0,2})X*J*I*")) {
+                yxComboValid = true;
+            } else { this.number = null; return; }
+
+            if (number.matches("N*M*D*C*Y*X*(J{3})") || number.matches("N*M*D*C*Y*X*(J{0,2})I*")) {
+                jiComboValid = true;
+            } else { this.number = null; return; }
+
+            if(nmComboValid && dcComboValid && yxComboValid && jiComboValid) {
+                this.number = number;
+            } else {
+                this.number = null;
+                throw new MalformedNumberException("Input Elbonian does not follow Elbonian rules.");
+            }
+
         } else if(number.matches("[0-9]+")) {
 
             if(Integer.parseInt(number) <= 0 || Integer.parseInt(number) > 9999) {
+                this.number = null;
                 throw new ValueOutOfBoundsException("Input Arabic exceeds Elbonian bounds.");
             } else if(Double.parseDouble(number) <= 0 || Double.parseDouble(number) >= 0) {
+                this.number = null;
                 throw new ValueOutOfBoundsException("Input Arabic cannot be decimal.");
-            } else { return; }
+            } else { this.number = null; return; }
 
         } else if(!number.matches("[0-9]+") && !number.matches("N{0,3}M{0,2}D{0,3}C{0,2}Y{0,3}X{0,2}J{0,3}I{0,2}")) {
+            this.number = null;
             throw new MalformedNumberException("Input Elbonian does not follow Elbonian rules.");
-        } else { return; }
 
-        if(conditionX && (holder != null) && (!holder.equals(""))) {
-
-            if (holder.matches("(N{3})D*C*Y*X*J*I*") || holder.matches("(N{0,2})M*D*C*Y*X*J*I*")) {
-                nmComboValid = true;
-            } else { return; }
-
-            if (holder.matches("N*M*(D{3})Y*X*J*I*") || holder.matches("N*M*(D{0,2})C*Y*X*J*I*")) {
-                dcComboValid = true;
-            } else { return; }
-
-            if (holder.matches("N*M*D*C*(Y{3})J*I*") || holder.matches("N*M*D*C*(Y{0,2})X*J*I*")) {
-                yxComboValid = true;
-            } else { return; }
-
-            if (holder.matches("N*M*D*C*Y*X*(J{3})") || holder.matches("N*M*D*C*Y*X*(J{0,2})I*")) {
-                jiComboValid = true;
-            } else { return; }
-
-        } else { return; }
-
-        if(nmComboValid && dcComboValid && yxComboValid && jiComboValid) {
-            number = holder;
-            this.number = number;
-        } else {
-            throw new MalformedNumberException("Input Elbonian does not follow Elbonian rules.");
-        }
+        } else { this.number = null; return; }
     }
 
     /**
@@ -178,7 +176,7 @@ public class ElbonianArabicConverter {
                 Elbo.append('J');
             }
 
-            int timesDivided8 = remainder7 / 1;
+            int timesDivided8 = remainder7;
             for (int i = 0; i < timesDivided8; i++) {
                 Elbo.append('I');
             }
