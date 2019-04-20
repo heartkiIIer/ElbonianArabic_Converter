@@ -44,16 +44,16 @@ public class ElbonianArabicConverter {
         number = number.replaceAll(" ",""); //remove all spaces; leading, trailing, and in-between
 
         /* Check if String is a valid integer */
-        if((number != null) && (!number.equals("")) && (number.matches("[0-9]+")) && (number.charAt(0) != '0') && (Integer.parseInt(number) <= 9999) && (Integer.parseInt(number) != 0)) {
-            this.number = number; //if valid, set
+        if((number != null) && (!number.equals("")) && (number.matches("-?[0-9]+"))) {
 
-            /* Check for negative integers */
-        } else if(number.matches("-?[0-9]+")) {
+            if((Integer.parseInt(number) <= 9999) && (Integer.parseInt(number) != 0) && (Integer.parseInt(number) > 0) && (number.charAt(0) != '0')) {
+                this.number = number; //if valid, set
 
-            /* Catch if integer is negative, zero, or greater than max */
-            if(Integer.parseInt(number) <= 0 || Integer.parseInt(number) > 9999) {
+                /* Catch if integer is negative, zero, or greater than max */
+            } else if((Integer.parseInt(number) <= 0 || Integer.parseInt(number) > 9999) || (number.charAt(0) == '0')) {
                 this.number = null;
                 throw new ValueOutOfBoundsException("Input Arabic exceeds Elbonian bounds.");
+
             } else { this.number = null; return; }
 
             /* Check for decimals, if found, throw exception */
@@ -106,6 +106,10 @@ public class ElbonianArabicConverter {
         } else if(!number.matches("[0-9]+") && !number.matches("N{0,3}M{0,2}D{0,3}C{0,2}Y{0,3}X{0,2}J{0,3}I{0,2}")) {
             this.number = null;
             throw new MalformedNumberException("Input String cannot contain both letter and digit characters.");
+
+        } else if((number == "") || (number.trim().isEmpty())) {
+            this.number = null;
+            throw new ValueOutOfBoundsException("Input must not be empty!");
 
         } else { this.number = null; return; }
     }
