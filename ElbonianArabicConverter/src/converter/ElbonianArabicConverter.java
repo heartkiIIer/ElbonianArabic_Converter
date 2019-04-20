@@ -39,23 +39,46 @@ public class ElbonianArabicConverter {
         if((number != null) && (!number.equals("")) && (number.matches("[0-9]+")) && (number.charAt(0) != '0') && (Integer.parseInt(number) <= 9999) && (Integer.parseInt(number) != 0)) {
             this.number = number;
 
+        } else if(number.matches("-?[0-9]+")) {
+
+            if(Integer.parseInt(number) <= 0 || Integer.parseInt(number) > 9999) {
+                this.number = null;
+                throw new ValueOutOfBoundsException("Input Arabic exceeds Elbonian bounds.");
+            } else { this.number = null; return; }
+
+        } else if(number.matches("-?\\d*\\.\\d+|\\d+\\d*")) {
+            this.number = null;
+            throw new ValueOutOfBoundsException("Input Arabic cannot be decimal.");
+
         } else if((number != null) && (!number.equals("")) && (number.matches("N{0,3}M{0,2}D{0,3}C{0,2}Y{0,3}X{0,2}J{0,3}I{0,2}"))) {
 
             if (number.matches("(N{3})D*C*Y*X*J*I*") || number.matches("(N{0,2})M*D*C*Y*X*J*I*")) {
                 nmComboValid = true;
-            } else { this.number = null; return; }
+            } else {
+                this.number = null;
+                throw new MalformedNumberException("Input Elbonian does not follow Elbonian rules.");
+            }
 
             if (number.matches("N*M*(D{3})Y*X*J*I*") || number.matches("N*M*(D{0,2})C*Y*X*J*I*")) {
                 dcComboValid = true;
-            } else { this.number = null; return; }
+            } else {
+                this.number = null;
+                throw new MalformedNumberException("Input Elbonian does not follow Elbonian rules.");
+            }
 
             if (number.matches("N*M*D*C*(Y{3})J*I*") || number.matches("N*M*D*C*(Y{0,2})X*J*I*")) {
                 yxComboValid = true;
-            } else { this.number = null; return; }
+            } else {
+                this.number = null;
+                throw new MalformedNumberException("Input Elbonian does not follow Elbonian rules.");
+            }
 
             if (number.matches("N*M*D*C*Y*X*(J{3})") || number.matches("N*M*D*C*Y*X*(J{0,2})I*")) {
                 jiComboValid = true;
-            } else { this.number = null; return; }
+            } else {
+                this.number = null;
+                throw new MalformedNumberException("Input Elbonian does not follow Elbonian rules.");
+            }
 
             if(nmComboValid && dcComboValid && yxComboValid && jiComboValid) {
                 this.number = number;
@@ -63,16 +86,6 @@ public class ElbonianArabicConverter {
                 this.number = null;
                 throw new MalformedNumberException("Input Elbonian does not follow Elbonian rules.");
             }
-
-        } else if(number.matches("[0-9]+")) {
-
-            if(Integer.parseInt(number) <= 0 || Integer.parseInt(number) > 9999) {
-                this.number = null;
-                throw new ValueOutOfBoundsException("Input Arabic exceeds Elbonian bounds.");
-            } else if(Double.parseDouble(number) <= 0 || Double.parseDouble(number) >= 0) {
-                this.number = null;
-                throw new ValueOutOfBoundsException("Input Arabic cannot be decimal.");
-            } else { this.number = null; return; }
 
         } else if(!number.matches("[0-9]+") && !number.matches("N{0,3}M{0,2}D{0,3}C{0,2}Y{0,3}X{0,2}J{0,3}I{0,2}")) {
             this.number = null;
@@ -88,8 +101,10 @@ public class ElbonianArabicConverter {
      * @return An arabic value
      */
     public int toArabic() {
+
         if(this.number.matches("[0-9]+")) {
             return Integer.parseInt(this.number);
+            
         } else {
             int arabicNum = 0;
             for (int i = 0; i < number.length(); i++) {
@@ -128,8 +143,10 @@ public class ElbonianArabicConverter {
      * @return An Elbonian value
      */
     public String toElbonian() {
+
         if(this.number.matches("N{0,3}M{0,2}D{0,3}C{0,2}Y{0,3}X{0,2}J{0,3}I{0,2}")) {
             return this.number;
+
         } else {
             int arabic = Integer.parseInt(number);
             StringBuilder Elbo = new StringBuilder();

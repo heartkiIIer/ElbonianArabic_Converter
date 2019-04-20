@@ -6,270 +6,229 @@ import converter.exceptions.ValueOutOfBoundsException;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 /**
  * Test cases for the ElbonianArabicConverter class.
  */
 public class ConverterTests {
 
-    @Test
-    public void ElbonianToArabicSampleTest() throws MalformedNumberException, ValueOutOfBoundsException {
-        ElbonianArabicConverter converter = new ElbonianArabicConverter("1");
-        assertEquals(converter.toElbonian(), "I");
-    }
+    /**
+     * Test cases for toElbonian() method
+     */
 
     @Test
-    public void ArabicToElbonianSampleTest() throws MalformedNumberException, ValueOutOfBoundsException {
-        ElbonianArabicConverter converter = new ElbonianArabicConverter("I");
-        assertEquals(converter.toArabic(), 1);
+    public void toElbonainTests() throws MalformedNumberException, ValueOutOfBoundsException {
+        ElbonianArabicConverter converter = new ElbonianArabicConverter("3660");
+        ElbonianArabicConverter converter0 = new ElbonianArabicConverter("6753");
+        ElbonianArabicConverter converter1 = new ElbonianArabicConverter("9999");
+        ElbonianArabicConverter converter2 = new ElbonianArabicConverter("1");
+        ElbonianArabicConverter converter3 = new ElbonianArabicConverter("NNMX");
+        ElbonianArabicConverter converter4 = new ElbonianArabicConverter("30");
+        ElbonianArabicConverter converter5 = new ElbonianArabicConverter("M");
+        ElbonianArabicConverter converter6 = new ElbonianArabicConverter("7357");
+        assertEquals(converter.toElbonian(), "NDDYY");
+        assertEquals(converter0.toElbonian(), "NNDDCYXXJ");
+        assertEquals(converter1.toElbonian(), "NNNDDDYYYJJJ");
+        assertEquals(converter2.toElbonian(), "I");
+        assertEquals(converter3.toElbonian(), "NNMX");
+        assertEquals(converter4.toElbonian(), "Y");
+        assertEquals(converter5.toElbonian(), "M");
+        assertEquals(converter6.toElbonian(), "NNMDYXXJJI");
     }
+
+
+    /**
+     * Test cases for toArabic() method
+     */
+
+    @Test
+    public void toArabicTests() throws MalformedNumberException, ValueOutOfBoundsException {
+        ElbonianArabicConverter ND = new ElbonianArabicConverter("ND");
+        ElbonianArabicConverter N = new ElbonianArabicConverter("N");
+        ElbonianArabicConverter I = new ElbonianArabicConverter("I");
+        ElbonianArabicConverter NNNDDD = new ElbonianArabicConverter("NNNDDD");
+        ElbonianArabicConverter JII = new ElbonianArabicConverter("JII");
+        ElbonianArabicConverter NDCY = new ElbonianArabicConverter("NDCY");
+        ElbonianArabicConverter converter = new ElbonianArabicConverter("9834");
+        ElbonianArabicConverter converter0 = new ElbonianArabicConverter("1");
+        assertEquals(ND.toArabic(), 3300);
+        assertEquals(N.toArabic(), 3000);
+        assertEquals(I.toArabic(), 1);
+        assertEquals(NNNDDD.toArabic(), 9900 );
+        assertEquals(JII.toArabic(), 5);
+        assertEquals(NDCY.toArabic(), 3430);
+        assertEquals(converter.toArabic(), 9834);
+        assertEquals(converter0.toArabic(), 1);
+    }
+
+
+    /**
+     * Test cases for ValueOutOfBoundsException
+     */
+
+    @Test(expected = ValueOutOfBoundsException.class)
+    public void zero() throws MalformedNumberException, ValueOutOfBoundsException {
+        ElbonianArabicConverter zero = new ElbonianArabicConverter("0");
+    }
+
+    @Test(expected = ValueOutOfBoundsException.class)
+    public void decimal() throws MalformedNumberException, ValueOutOfBoundsException {
+        ElbonianArabicConverter decimal = new ElbonianArabicConverter("63.4");
+    }
+
+    @Test(expected = ValueOutOfBoundsException.class)
+    public void negativeDecimal() throws MalformedNumberException, ValueOutOfBoundsException {
+        ElbonianArabicConverter decimal = new ElbonianArabicConverter("-2.0");
+    }
+
+    @Test(expected = ValueOutOfBoundsException.class)
+    public void biggerThanMax() throws MalformedNumberException, ValueOutOfBoundsException {
+        ElbonianArabicConverter biggerThanMax = new ElbonianArabicConverter("10010");
+    }
+
+    @Test(expected = ValueOutOfBoundsException.class)
+    public void negative() throws MalformedNumberException, ValueOutOfBoundsException {
+        ElbonianArabicConverter negative = new ElbonianArabicConverter("-9");
+    }
+
+    @Test(expected = ValueOutOfBoundsException.class)
+    public void moreNegative() throws MalformedNumberException, ValueOutOfBoundsException {
+        ElbonianArabicConverter moreNegative = new ElbonianArabicConverter("-1");
+    }
+
+
+    /**
+     * Test cases for MalformedNumberException
+     */
 
     @Test(expected = MalformedNumberException.class)
     public void malformedNumberTest() throws MalformedNumberException, ValueOutOfBoundsException {
         throw new MalformedNumberException("TEST");
     }
 
-    @Test(expected = ValueOutOfBoundsException.class)
-    public void valueOutOfBoundsTest() throws MalformedNumberException, ValueOutOfBoundsException {
-        throw new ValueOutOfBoundsException("0");
-    }
-
-    @Test(expected = ValueOutOfBoundsException.class)
-    public void Test1() throws MalformedNumberException, ValueOutOfBoundsException {
-        ElbonianArabicConverter converter1 = new ElbonianArabicConverter("10010");
-        throw new ValueOutOfBoundsException("Large Value");
-    }
-
-    @Test
-    public void Test2() throws MalformedNumberException, ValueOutOfBoundsException {
-        ElbonianArabicConverter converter2 = new ElbonianArabicConverter("9999");
-        assertEquals(converter2.toElbonian(), "NNNDDDYYYJJJ");
-    }
-
-    @Test
-    public void toElbonainTest2() throws MalformedNumberException, ValueOutOfBoundsException {
-        ElbonianArabicConverter converter2 = new ElbonianArabicConverter("3660");
-        assertEquals(converter2.toElbonian(), "NDDYY");
-    }
-
-    @Test(expected = MalformedNumberException.class)
-    public void Test3() throws MalformedNumberException, ValueOutOfBoundsException {
-        ElbonianArabicConverter converter3 = new ElbonianArabicConverter("99 9");
-        throw new MalformedNumberException("Spaces");
-    }
-
-    @Test
-    public void ElbonianToArabicTest() throws MalformedNumberException, ValueOutOfBoundsException {
-        ElbonianArabicConverter converter4 = new ElbonianArabicConverter("N");
-        assertEquals(converter4.toArabic(), 3000);
+    @Test (expected = MalformedNumberException.class)
+    public void caseDetect() throws MalformedNumberException, ValueOutOfBoundsException {
+        ElbonianArabicConverter caseDetect = new ElbonianArabicConverter("n");
     }
 
     @Test (expected = MalformedNumberException.class)
-    public void toArabicTest2() throws MalformedNumberException, ValueOutOfBoundsException {
-        ElbonianArabicConverter converter2 = new ElbonianArabicConverter("DYN");
-        throw new MalformedNumberException("Incorrect Order");
+    public void randomLetters() throws MalformedNumberException, ValueOutOfBoundsException {
+        ElbonianArabicConverter randomLetters = new ElbonianArabicConverter("MLX");
     }
 
     @Test (expected = MalformedNumberException.class)
-    public void toArabicTest3() throws MalformedNumberException, ValueOutOfBoundsException {
-        ElbonianArabicConverter converter2 = new ElbonianArabicConverter("IXJ");
-        throw new MalformedNumberException("Incorrect Order");
-    }
-
-    @Test
-    public void toArabicTest4() throws MalformedNumberException, ValueOutOfBoundsException {
-        ElbonianArabicConverter converter7 = new ElbonianArabicConverter("ND");
-        assertEquals(converter7.toArabic(), 3300);
-    }
-
-    @Test
-    public void toArabicTest5() throws MalformedNumberException, ValueOutOfBoundsException {
-        ElbonianArabicConverter converter8 = new ElbonianArabicConverter("NNNDDD");
-        assertEquals(converter8.toArabic(), 9900 );
-    }
-
-    @Test(expected = ValueOutOfBoundsException.class)
-    public void valueOutTest() throws MalformedNumberException, ValueOutOfBoundsException {
-        ElbonianArabicConverter converter1 = new ElbonianArabicConverter("-9");
-        throw new ValueOutOfBoundsException("Negative Number");
-    }
-
-    @Test
-    public void toArabicTest6() throws MalformedNumberException, ValueOutOfBoundsException {
-        ElbonianArabicConverter converter4 = new ElbonianArabicConverter("JII");
-        assertEquals(converter4.toArabic(), 5);
-    }
-
-    @Test
-    public void toArabicTest7() throws MalformedNumberException, ValueOutOfBoundsException {
-        ElbonianArabicConverter converter4 = new ElbonianArabicConverter("NDCY");
-        assertEquals(converter4.toArabic(), 3430);
-    }
-
-    @Test
-    public void toElbonainTest3() throws MalformedNumberException, ValueOutOfBoundsException {
-        ElbonianArabicConverter converter9 = new ElbonianArabicConverter("6753");
-        assertEquals(converter9.toElbonian(), "NNDDCYXXJ");
-    }
-
-    // Here are the tests we failed last time
-    @Test (expected = MalformedNumberException.class)
-    public void Malformed() throws MalformedNumberException, ValueOutOfBoundsException {
-        ElbonianArabicConverter given1 = new ElbonianArabicConverter("1M");
-        throw new MalformedNumberException("Number and Letter");
-    }
-
-
-    @Test (expected = MalformedNumberException.class)
-    public void invalidCombo() throws MalformedNumberException, ValueOutOfBoundsException {
-        ElbonianArabicConverter given2 = new ElbonianArabicConverter("NMDDDCYXJI");
-        throw new MalformedNumberException("Invalid Combo");
+    public void mixedDigitLetter() throws MalformedNumberException, ValueOutOfBoundsException {
+        ElbonianArabicConverter mixedDigitLetter = new ElbonianArabicConverter("1M");
     }
 
     @Test (expected = MalformedNumberException.class)
-    public void invalidOrder() throws MalformedNumberException, ValueOutOfBoundsException {
-        ElbonianArabicConverter given3 = new ElbonianArabicConverter("NMCDYXJI");
-        throw new MalformedNumberException("Invalid Order");
+    public void yOverload() throws MalformedNumberException, ValueOutOfBoundsException {
+        ElbonianArabicConverter yOverload = new ElbonianArabicConverter("NDYYYYJ");
     }
 
     @Test (expected = MalformedNumberException.class)
-    public void invalidOrder2() throws MalformedNumberException, ValueOutOfBoundsException {
-        ElbonianArabicConverter given4 = new ElbonianArabicConverter("INMDCYXJ");
-        throw new MalformedNumberException("Invalid Order");
+    public void xOverload() throws MalformedNumberException, ValueOutOfBoundsException {
+        ElbonianArabicConverter xOverload = new ElbonianArabicConverter("MCXXXI");
     }
 
     @Test (expected = MalformedNumberException.class)
-    public void invalidOrder3() throws MalformedNumberException, ValueOutOfBoundsException {
-        ElbonianArabicConverter given5 = new ElbonianArabicConverter("NMDCYJXI");
-        throw new MalformedNumberException("Invalid Order");
+    public void nOverload() throws MalformedNumberException, ValueOutOfBoundsException {
+        ElbonianArabicConverter nOverload = new ElbonianArabicConverter("NNNNDYJ");
     }
 
     @Test (expected = MalformedNumberException.class)
-    public void invalidOrder4() throws MalformedNumberException, ValueOutOfBoundsException {
-        ElbonianArabicConverter given6 = new ElbonianArabicConverter("MNDCYXJI");
-        throw new MalformedNumberException("Invalid Order");
+    public void mOverload() throws MalformedNumberException, ValueOutOfBoundsException {
+        ElbonianArabicConverter mOverload = new ElbonianArabicConverter("MMMCXI");
     }
 
     @Test (expected = MalformedNumberException.class)
-    public void invalidOrder5() throws MalformedNumberException, ValueOutOfBoundsException {
-        ElbonianArabicConverter given7 = new ElbonianArabicConverter("MDCYXJIN");
-        throw new MalformedNumberException("Invalid Order");
+    public void jOverload() throws MalformedNumberException, ValueOutOfBoundsException {
+        ElbonianArabicConverter jOverload = new ElbonianArabicConverter("NDYJJJJ");
     }
 
     @Test (expected = MalformedNumberException.class)
-    public void invalidOrder6() throws MalformedNumberException, ValueOutOfBoundsException {
-        ElbonianArabicConverter given8 = new ElbonianArabicConverter("NMDCXYJI");
-        throw new MalformedNumberException("Invalid Order");
+    public void iOverload() throws MalformedNumberException, ValueOutOfBoundsException {
+        ElbonianArabicConverter iOverload = new ElbonianArabicConverter("MCXIII");
     }
 
     @Test (expected = MalformedNumberException.class)
-    public void invalidOrder7() throws MalformedNumberException, ValueOutOfBoundsException {
-        ElbonianArabicConverter given9 = new ElbonianArabicConverter("NMDYCXJI");
-        throw new MalformedNumberException("Invalid Order");
+    public void dOverload() throws MalformedNumberException, ValueOutOfBoundsException {
+        ElbonianArabicConverter dOverload = new ElbonianArabicConverter("NDDDDYJ");
     }
 
     @Test (expected = MalformedNumberException.class)
-    public void invalidCombo2() throws MalformedNumberException, ValueOutOfBoundsException {
-        ElbonianArabicConverter given10 = new ElbonianArabicConverter("NMDCYXJJJI");
-        throw new MalformedNumberException("Invalid Combo");
-    }
-
-
-    @Test (expected = MalformedNumberException.class)
-    public void invalidCombo3() throws MalformedNumberException, ValueOutOfBoundsException {
-        ElbonianArabicConverter given11 = new ElbonianArabicConverter("NNNMDCYXJI");
-        throw new MalformedNumberException("Invalid Combo");
+    public void cOverload() throws MalformedNumberException, ValueOutOfBoundsException {
+        ElbonianArabicConverter cOverload = new ElbonianArabicConverter("MCCCXI");
     }
 
     @Test (expected = MalformedNumberException.class)
-    public void invalidCombo4() throws MalformedNumberException, ValueOutOfBoundsException {
-        ElbonianArabicConverter given12 = new ElbonianArabicConverter("NNNMDCYXJI");
-        throw new MalformedNumberException("Invalid Combo");
+    public void threeDsButC() throws MalformedNumberException, ValueOutOfBoundsException {
+        ElbonianArabicConverter threeDsButC = new ElbonianArabicConverter("NMDDDCYXJI");
     }
 
     @Test (expected = MalformedNumberException.class)
-    public void invalidCombo5() throws MalformedNumberException, ValueOutOfBoundsException {
-        ElbonianArabicConverter given12 = new ElbonianArabicConverter("NMDCYYYXJI");
-        throw new MalformedNumberException("Invalid Combo");
-    }
-
-
-    @Test (expected = MalformedNumberException.class)
-    public void invalidOrder8() throws MalformedNumberException, ValueOutOfBoundsException {
-        ElbonianArabicConverter given13 = new ElbonianArabicConverter("NDMCYXJI");
-        throw new MalformedNumberException("Invalid Order");
+    public void threeYsButX() throws MalformedNumberException, ValueOutOfBoundsException {
+        ElbonianArabicConverter threeYsButX = new ElbonianArabicConverter("NMDCYYYXJI");
     }
 
     @Test (expected = MalformedNumberException.class)
-    public void toManyC() throws MalformedNumberException, ValueOutOfBoundsException {
-        ElbonianArabicConverter given13 = new ElbonianArabicConverter("MCCCXI");
-        throw new MalformedNumberException("Too many C's");
+    public void threeNsButM() throws MalformedNumberException, ValueOutOfBoundsException {
+        ElbonianArabicConverter threeNsButM = new ElbonianArabicConverter("NNNMDCYXJI");
     }
 
     @Test (expected = MalformedNumberException.class)
-    public void toManyD() throws MalformedNumberException, ValueOutOfBoundsException {
-        ElbonianArabicConverter given13 = new ElbonianArabicConverter("NDDDDYJ");
-        throw new MalformedNumberException("Too many D's");
+    public void threeJsButI() throws MalformedNumberException, ValueOutOfBoundsException {
+        ElbonianArabicConverter threeJsButI = new ElbonianArabicConverter("NMDCYXJJJI");
     }
 
     @Test (expected = MalformedNumberException.class)
-    public void toManyI() throws MalformedNumberException, ValueOutOfBoundsException {
-        ElbonianArabicConverter given13 = new ElbonianArabicConverter("MCXIII");
-        throw new MalformedNumberException("Too many I's");
+    public void lostOrder() throws MalformedNumberException, ValueOutOfBoundsException {
+        ElbonianArabicConverter lostOrder = new ElbonianArabicConverter("DYN");
     }
 
     @Test (expected = MalformedNumberException.class)
-    public void toManyJ() throws MalformedNumberException, ValueOutOfBoundsException {
-        ElbonianArabicConverter given13 = new ElbonianArabicConverter("NDYJJJJ");
-        throw new MalformedNumberException("Too many J's");
+    public void incorrectOrder() throws MalformedNumberException, ValueOutOfBoundsException {
+        ElbonianArabicConverter incorrectOrder = new ElbonianArabicConverter("IXJ");
     }
 
     @Test (expected = MalformedNumberException.class)
-    public void toManyM() throws MalformedNumberException, ValueOutOfBoundsException {
-        ElbonianArabicConverter given13 = new ElbonianArabicConverter("MMMCXI");
-        throw new MalformedNumberException("Too many M's");
+    public void anotherWrongOrder() throws MalformedNumberException, ValueOutOfBoundsException {
+        ElbonianArabicConverter anotherWrongOrder = new ElbonianArabicConverter("NMDYCXJI");
     }
 
     @Test (expected = MalformedNumberException.class)
-    public void toManyN() throws MalformedNumberException, ValueOutOfBoundsException {
-        ElbonianArabicConverter given13 = new ElbonianArabicConverter("NNNNDYJ");
-        throw new MalformedNumberException("Too many N's");
+    public void really() throws MalformedNumberException, ValueOutOfBoundsException {
+        ElbonianArabicConverter really = new ElbonianArabicConverter("NMDCXYJI");
     }
 
     @Test (expected = MalformedNumberException.class)
-    public void toManyX() throws MalformedNumberException, ValueOutOfBoundsException {
-        ElbonianArabicConverter given13 = new ElbonianArabicConverter("MCXXXI");
-        throw new MalformedNumberException("Too many X's");
+    public void cantgetItRight() throws MalformedNumberException, ValueOutOfBoundsException {
+        ElbonianArabicConverter cantGetItRight = new ElbonianArabicConverter("MDCYXJIN");
     }
 
     @Test (expected = MalformedNumberException.class)
-    public void toManyY() throws MalformedNumberException, ValueOutOfBoundsException {
-        ElbonianArabicConverter given13 = new ElbonianArabicConverter("NDYYYYJ");
-        throw new MalformedNumberException("Too many Y's");
-    }
-
-    //Out of bounds
-    @Test(expected = ValueOutOfBoundsException.class)
-    public void negative() throws MalformedNumberException, ValueOutOfBoundsException {
-        ElbonianArabicConverter converter1 = new ElbonianArabicConverter("-1");
-        throw new ValueOutOfBoundsException("Negative Number");
-    }
-
-    @Test(expected = ValueOutOfBoundsException.class)
-    public void zero() throws MalformedNumberException, ValueOutOfBoundsException {
-        ElbonianArabicConverter converter1 = new ElbonianArabicConverter("0");
-        throw new ValueOutOfBoundsException("Zero Value");
+    public void stillWrongOrder() throws MalformedNumberException, ValueOutOfBoundsException {
+        ElbonianArabicConverter stillWrongOrder = new ElbonianArabicConverter("MNDCYXJI");
     }
 
     @Test (expected = MalformedNumberException.class)
-    public void caseDetection() throws MalformedNumberException, ValueOutOfBoundsException {
-        ElbonianArabicConverter given13 = new ElbonianArabicConverter("k");
-        throw new MalformedNumberException("Lower Case");
+    public void didItAgain() throws MalformedNumberException, ValueOutOfBoundsException {
+        ElbonianArabicConverter didItAgain = new ElbonianArabicConverter("NMDCYJXI");
     }
 
     @Test (expected = MalformedNumberException.class)
-    public void nonElbonianCharacter() throws MalformedNumberException, ValueOutOfBoundsException {
-        ElbonianArabicConverter given13 = new ElbonianArabicConverter("MLX");
-        throw new MalformedNumberException("Non Elbonian Character Given");
+    public void andAgain() throws MalformedNumberException, ValueOutOfBoundsException {
+        ElbonianArabicConverter andAgain = new ElbonianArabicConverter("INMDCYXJ");
+    }
+
+    @Test (expected = MalformedNumberException.class)
+    public void seriously() throws MalformedNumberException, ValueOutOfBoundsException {
+        ElbonianArabicConverter seriously = new ElbonianArabicConverter("NDMCYXJI");
+    }
+
+    @Test (expected = MalformedNumberException.class)
+    public void oneMoreTime() throws MalformedNumberException, ValueOutOfBoundsException {
+        ElbonianArabicConverter oneMoreTime = new ElbonianArabicConverter("NMCDYXJI");
     }
 }
