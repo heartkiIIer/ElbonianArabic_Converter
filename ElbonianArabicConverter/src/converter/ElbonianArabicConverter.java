@@ -1,3 +1,9 @@
+
+/*** CS3733 Assignment 4: TDD and Pair Programming
+     Shine Linn Thant -- slinnthant@wpi.edu
+     Kyle Heavey -- kheavey@wpi.edu ***/
+
+
 package converter;
 
 import converter.exceptions.MalformedNumberException;
@@ -29,6 +35,7 @@ public class ElbonianArabicConverter {
      */
     public ElbonianArabicConverter(String number) throws MalformedNumberException, ValueOutOfBoundsException {
 
+        /* initialize these booleans for later use */
         boolean nmComboValid = false;
         boolean dcComboValid = false;
         boolean yxComboValid = false;
@@ -36,21 +43,28 @@ public class ElbonianArabicConverter {
 
         number = number.replaceAll(" ",""); //remove all spaces; leading, trailing, and in-between
 
+        /* Check if String is a valid integer */
         if((number != null) && (!number.equals("")) && (number.matches("[0-9]+")) && (number.charAt(0) != '0') && (Integer.parseInt(number) <= 9999) && (Integer.parseInt(number) != 0)) {
-            this.number = number;
+            this.number = number; //if valid, set
 
+            /* Check for negative integers */
         } else if(number.matches("-?[0-9]+")) {
 
+            /* Catch if integer is negative, zero, or greater than max */
             if(Integer.parseInt(number) <= 0 || Integer.parseInt(number) > 9999) {
                 this.number = null;
                 throw new ValueOutOfBoundsException("Input Arabic exceeds Elbonian bounds.");
             } else { this.number = null; return; }
 
+            /* Check for decimals, if found, throw exception */
         } else if(number.matches("-?\\d*\\.\\d+|\\d+\\d*")) {
             this.number = null;
             throw new ValueOutOfBoundsException("Input Arabic cannot be decimal.");
 
+            /* Check if String is a valid character sequence */
         } else if((number != null) && (!number.equals("")) && (number.matches("N{0,3}M{0,2}D{0,3}C{0,2}Y{0,3}X{0,2}J{0,3}I{0,2}"))) {
+
+            /* Check if each character in the sequence violates Elbonian rules */
 
             if (number.matches("(N{3})D*C*Y*X*J*I*") || number.matches("(N{0,2})M*D*C*Y*X*J*I*")) {
                 nmComboValid = true;
@@ -80,16 +94,18 @@ public class ElbonianArabicConverter {
                 throw new MalformedNumberException("Input Elbonian does not follow Elbonian rules.");
             }
 
+            /* Check if all characters in the sequence follow all Elbonian rules */
             if(nmComboValid && dcComboValid && yxComboValid && jiComboValid) {
-                this.number = number;
+                this.number = number; //if valid, set
             } else {
                 this.number = null;
                 throw new MalformedNumberException("Input Elbonian does not follow Elbonian rules.");
             }
 
+            /* Check if String contains a mix of both letters and digits */
         } else if(!number.matches("[0-9]+") && !number.matches("N{0,3}M{0,2}D{0,3}C{0,2}Y{0,3}X{0,2}J{0,3}I{0,2}")) {
             this.number = null;
-            throw new MalformedNumberException("Input Elbonian does not follow Elbonian rules.");
+            throw new MalformedNumberException("Input String cannot contain both letter and digit characters.");
 
         } else { this.number = null; return; }
     }
@@ -102,9 +118,10 @@ public class ElbonianArabicConverter {
      */
     public int toArabic() {
 
+        /* Check if input String is already in Arabic form */
         if(this.number.matches("[0-9]+")) {
-            return Integer.parseInt(this.number);
-            
+            return Integer.parseInt(this.number); //if so, just return
+
         } else {
             int arabicNum = 0;
             for (int i = 0; i < number.length(); i++) {
@@ -144,8 +161,9 @@ public class ElbonianArabicConverter {
      */
     public String toElbonian() {
 
+        /* Check if input String is already in Elbonian form */
         if(this.number.matches("N{0,3}M{0,2}D{0,3}C{0,2}Y{0,3}X{0,2}J{0,3}I{0,2}")) {
-            return this.number;
+            return this.number; //if so, just return
 
         } else {
             int arabic = Integer.parseInt(number);
